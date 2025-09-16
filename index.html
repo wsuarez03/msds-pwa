@@ -1,20 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hojas de Seguridad</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MSDS PWA — Hojas de Seguridad</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>📄 Hojas de Seguridad</h1>
+  <header>
+    <h1>📄 Hojas de Seguridad (MSDS)</h1>
+    <div>
+      <button id="btnInstall" style="display:none">Instalar App</button>
+      <button id="btnAdminLogin">Admin (Ingresar token)</button>
+      <button id="btnOpenQRAdmin">Generar QRs (Admin)</button>
+    </div>
+  </header>
 
-  <ul id="pdf-list"></ul>
+  <main>
+    <section class="card">
+      <input id="search" placeholder="Buscar por nombre..." />
+    </section>
 
-  <button id="add-pdf">➕ Adjuntar PDF</button>
-  <input type="file" id="fileInput" accept="application/pdf" style="display:none">
+    <section class="card">
+      <h2>Listado de fichas</h2>
+      <div id="list" aria-live="polite"></div>
+    </section>
 
+    <section class="card" id="viewer" style="display:none">
+      <h3 id="v-title"></h3>
+      <div id="v-meta"></div>
+      <div id="v-pdf"></div>
+      <div style="margin-top:8px;">
+        <button id="btn-download">Descargar PDF</button>
+        <button id="btn-close">Cerrar</button>
+      </div>
+    </section>
+
+    <section class="card" id="uploaderCard">
+      <h2>➕ Adjuntar nuevo PDF (Admin)</h2>
+      <form id="uploadForm">
+        <label>PDF: <input type="file" id="pdfFile" accept="application/pdf" required></label><br/>
+        <label>Nombre: <input type="text" id="pdfName" required></label><br/>
+        <label>Versión: <input type="text" id="pdfVersion" value="1.0" required></label><br/>
+        <label>Fecha (opcional): <input type="datetime-local" id="pdfDate"></label><br/>
+        <small>Nota: para subir a GitHub utiliza "Admin (Ingresar token)".</small><br/>
+        <button type="submit">Subir y actualizar catalog.json</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

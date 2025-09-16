@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Generar QR</title></head>
+<body>
+  <h2>Generar QR por documento</h2>
+  <div id="list"></div>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script>
+    async function load(){
+      const r = await fetch('/catalog.json');
+      const catalog = await r.json();
+      const list = document.getElementById('list');
+      for(const e of catalog){
+        const div = document.createElement('div');
+        div.style.border="1px solid #ccc"; div.style.padding="8px"; div.style.margin="8px 0";
+        div.innerHTML = `<strong>${e.name}</strong> <br/> <small>${e.id}</small> <div id="qr-${e.id}"></div>`;
+        list.appendChild(div);
+        const payload = location.origin + '/index.html#' + '/doc/' + e.id;
+        QRCode.toDataURL(payload, {width:200}).then(url=>{
+          const img = document.createElement('img');
+          img.src = url; img.width=200;
+          document.getElementById('qr-'+e.id).appendChild(img);
+          const a = document.createElement('a'); a.href = url; a.download = e.id + '-qr.png'; a.textContent=' Descargar QR';
+          document.getElementById('qr-'+e.id).appendChild(a);
+        });
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

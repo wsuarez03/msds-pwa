@@ -3,21 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MSDS PWA — Hojas de Seguridad</title>
-  <link rel="manifest" href="manifest.json" />
+  <title>MSDS — Listado</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>📄 Hojas de Seguridad (MSDS)</h1>
+  <header style="display:flex;justify-content:space-between;align-items:center;padding:12px">
+    <h1>📄 Hojas de Seguridad</h1>
     <div>
-      <button id="btnInstall" style="display:none">Instalar App</button>
-      <button id="btnAdminLogin">Admin (Ingresar token)</button>
-      <button id="btnOpenQRAdmin">Generar QRs (Admin)</button>
+      <button id="btnLogout">Salir</button>
     </div>
   </header>
 
-  <main>
+  <main style="max-width:980px;margin:16px auto;padding:8px">
     <section class="card">
       <input id="search" placeholder="Buscar por nombre..." />
     </section>
@@ -36,21 +33,21 @@
         <button id="btn-close">Cerrar</button>
       </div>
     </section>
-
-    <section class="card" id="uploaderCard">
-      <h2>➕ Adjuntar nuevo PDF (Admin)</h2>
-      <form id="uploadForm">
-        <label>PDF: <input type="file" id="pdfFile" accept="application/pdf" required></label><br/>
-        <label>Nombre: <input type="text" id="pdfName" required></label><br/>
-        <label>Versión: <input type="text" id="pdfVersion" value="1.0" required></label><br/>
-        <label>Fecha (opcional): <input type="datetime-local" id="pdfDate"></label><br/>
-        <small>Nota: para subir a GitHub utiliza "Admin (Ingresar token)".</small><br/>
-        <button type="submit">Subir y actualizar catalog.json</button>
-      </form>
-    </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
   <script src="app.js"></script>
+  <script>
+    // session check
+    const session = sessionStorage.getItem('msds_user');
+    if(!session){
+      // if no session, redirect to login
+      location.href = 'login.html';
+    }
+    document.getElementById('btnLogout').addEventListener('click', ()=> {
+      sessionStorage.removeItem('msds_user');
+      location.href = 'login.html';
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MSDS — Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main style="max-width:600px;margin:24px auto">
+    <h1>Iniciar sesión</h1>
+    <form id="loginForm">
+      <label>Usuario<br/><input id="username" required></label><br/>
+      <label>Contraseña<br/><input id="password" type="password" required></label><br/>
+      <button type="submit">Entrar</button>
+    </form>
+    <p id="msg" style="color:red"></p>
+    <p style="margin-top:20px">Si no tienes cuenta, pide al administrador que te cree una.</p>
+  </main>
+
+  <script src="login.js"></script>
+</body>
+</html>

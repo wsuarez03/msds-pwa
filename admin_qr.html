@@ -1,31 +1,74 @@
 <!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Generar QR</title></head>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MSDS - Admin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 <body>
-  <h2>Generar QR por documento</h2>
-  <div id="list"></div>
+  <header style="display:flex;justify-content:space-between;align-items:center;padding:12px">
+    <h1>Admin — MSDS</h1>
+    <div>
+      <button id="btnLogout">Salir</button>
+    </div>
+  </header>
+
+  <main style="max-width:980px;margin:16px auto;padding:8px">
+    <section class="card">
+      <h2>Panel admin</h2>
+      <p>En esta sección puedes subir PDFs (individual o masivo), crear usuarios y eliminar PDFs vencidos.</p>
+
+      <div id="adminTokenDiv">
+        <button id="btnAdminLogin">Ingresar token de GitHub (sesión)</button>
+        <span id="tokenInfo" style="margin-left:8px;color:green"></span>
+      </div>
+
+      <hr/>
+
+      <h3>Subida individual</h3>
+      <input type="file" id="pdfFile" accept="application/pdf"><br/>
+      <input type="text" id="pdfName" placeholder="Nombre del producto"><br/>
+      <input type="text" id="pdfVersion" placeholder="Versión"><br/>
+      <input type="datetime-local" id="pdfDate"><br/>
+      <button id="btnUploadSingle">Subir PDF</button>
+
+      <hr/>
+      <h3>Subida masiva</h3>
+      <input type="file" id="pdfMulti" accept="application/pdf" multiple><br/>
+      <button id="btnUploadMulti">Subir seleccionados</button>
+
+      <hr/>
+      <h3>Gestión usuarios</h3>
+      <input id="newUserName" placeholder="Nuevo usuario"><br/>
+      <input id="newUserPass" placeholder="Contraseña" type="password"><br/>
+      <select id="newUserRole"><option value="user">Usuario</option><option value="admin">Administrador</option></select><br/>
+      <button id="btnCreateUser">Crear usuario</button>
+
+      <hr/>
+      <button id="btnDeleteAllExpired">Eliminar todas vencidas</button>
+    </section>
+
+    <section class="card">
+      <h2>Listado (admin)</h2>
+      <div id="list" aria-live="polite"></div>
+    </section>
+
+  </main>
+
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  <script src="app.js"></script>
   <script>
-    async function load(){
-      const r = await fetch('/catalog.json');
-      const catalog = await r.json();
-      const list = document.getElementById('list');
-      for(const e of catalog){
-        const div = document.createElement('div');
-        div.style.border="1px solid #ccc"; div.style.padding="8px"; div.style.margin="8px 0";
-        div.innerHTML = `<strong>${e.name}</strong> <br/> <small>${e.id}</small> <div id="qr-${e.id}"></div>`;
-        list.appendChild(div);
-        const payload = location.origin + '/index.html#' + '/doc/' + e.id;
-        QRCode.toDataURL(payload, {width:200}).then(url=>{
-          const img = document.createElement('img');
-          img.src = url; img.width=200;
-          document.getElementById('qr-'+e.id).appendChild(img);
-          const a = document.createElement('a'); a.href = url; a.download = e.id + '-qr.png'; a.textContent=' Descargar QR';
-          document.getElementById('qr-'+e.id).appendChild(a);
-        });
-      }
-    }
-    load();
+    // require admin session
+    const s = sessionStorage.getItem('msds_user');
+    if(!s){ location.href = 'login.html'; }
+    const user = JSON.parse(s);
+    if(user.role !== 'admin'){ alert('Acceso de administrador requerido'); location.href = 'index.html'; }
+
+    document.getElementById('btnLogout').addEventListener('click', ()=> {
+      sessionStorage.removeItem('msds_user');
+      location.href = 'login.html';
+    });
   </script>
 </body>
 </html>
